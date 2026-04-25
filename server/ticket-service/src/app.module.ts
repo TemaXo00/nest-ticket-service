@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import {ConfigModule} from "@nestjs/config";
 
+import { KnownEventsModule } from './known-events/known-events.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -8,7 +9,8 @@ import { PrismaModule } from './prisma/prisma.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule
+    PrismaModule,
+    KnownEventsModule
   ],
   controllers: [],
   providers: [],
