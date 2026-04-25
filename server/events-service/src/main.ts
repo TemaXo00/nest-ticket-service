@@ -1,9 +1,12 @@
-import {NestFactory} from '@nestjs/core';
 import {ValidationPipe} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
+import {NestFactory} from '@nestjs/core';
+import {MicroserviceOptions, Transport} from "@nestjs/microservices";
+import {SwaggerModule} from "@nestjs/swagger";
+import {OpenAPIObject} from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
 
 import {AppModule} from './app.module';
-import {MicroserviceOptions, Transport} from "@nestjs/microservices";
+import {swaggerOptions} from "./config/swagger/options.config";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -24,6 +27,9 @@ async function bootstrap(): Promise<void> {
     }
   })
 
+  const documentFactory = (): OpenAPIObject => SwaggerModule.createDocument(app, swaggerOptions)
+  SwaggerModule.setup('docs', app, documentFactory)
+
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist: true,
@@ -32,6 +38,11 @@ async function bootstrap(): Promise<void> {
       enableImplicitConversion: true
     }
   }));
+
+  app.enableCors({
+    origin: config.getOrThrow<string>('CORS_CLIENT_ORIGIN'),
+    credentials: true,
+  })
 
   await app.listen(3000);
 }
