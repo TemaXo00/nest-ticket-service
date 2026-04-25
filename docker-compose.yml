@@ -8,6 +8,7 @@ services:
     ports:
       - "${TICKET_SERVICE_PORT}:3000"
     environment:
+      CORS_CLIENT_ORIGIN: ${CORS_CLIENT_ORIGIN}
       DATABASE_URL: ${TICKET_DB_URL}
       REDIS_URL: ${REDIS_URL}
       RABBIT_MQ_USER: ${RABBIT_MQ_USER}
@@ -35,6 +36,7 @@ services:
     ports:
       - "${EVENTS_SERVICE_PORT}:3000"
     environment:
+      CORS_CLIENT_ORIGIN: ${CORS_CLIENT_ORIGIN}
       DATABASE_URL: ${EVENTS_DB_URL}
       REDIS_URL: ${REDIS_URL}
       RABBIT_MQ_USER: ${RABBIT_MQ_USER}
