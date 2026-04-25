@@ -14,6 +14,7 @@ services:
       RABBIT_MQ_USER: ${RABBIT_MQ_USER}
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
       TICKET_QUEUE: ${TICKET_QUEUE}
+      EVENTS_QUEUE: ${EVENTS_QUEUE}
     volumes:
       - ./server/ticket-service:/app
       - /app/node_modules
@@ -42,6 +43,7 @@ services:
       RABBIT_MQ_USER: ${RABBIT_MQ_USER}
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
       TICKET_QUEUE: ${TICKET_QUEUE}
+      EVENTS_QUEUE: ${EVENTS_QUEUE}
     volumes:
       - ./server/events-service:/app
       - /app/node_modules
