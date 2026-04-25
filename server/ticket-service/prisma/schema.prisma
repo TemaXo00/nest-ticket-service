@@ -12,9 +12,11 @@ model Ticket {
   id String @id @default(uuid(4))
 
   event_id String
-  event    KnownEvents @relation(fields: [event_id], references: [id])
+  event    KnownEvents @relation(fields: [event_id], references: [id], onDelete: Cascade)
 
   user_id String
+
+  @@map("tickets")
 }
 
 model KnownEvents {
@@ -25,4 +27,6 @@ model KnownEvents {
   tickets Ticket[]
 
   created_at DateTime @default(now())
+
+  @@map("known_events")
 }
