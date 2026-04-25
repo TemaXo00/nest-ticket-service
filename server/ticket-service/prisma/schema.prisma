@@ -7,3 +7,22 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Ticket {
+  id String @id @default(uuid(4))
+
+  event_id String
+  event    KnownEvents @relation(fields: [event_id], references: [id])
+
+  user_id String
+}
+
+model KnownEvents {
+  id String @id
+
+  name String
+
+  tickets Ticket[]
+
+  created_at DateTime @default(now())
+}
