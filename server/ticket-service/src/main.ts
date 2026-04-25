@@ -5,7 +5,7 @@ import {MicroserviceOptions, Transport} from "@nestjs/microservices";
 import {OpenAPIObject, SwaggerModule} from "@nestjs/swagger";
 
 import {AppModule} from './app.module';
-import {swaggerOptions} from "./config/swagger/options.config";
+import {swaggerConfig, swaggerUIconfig} from "./config/swagger.config";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -26,8 +26,8 @@ async function bootstrap(): Promise<void> {
     }
   })
 
-  const documentFactory = (): OpenAPIObject => SwaggerModule.createDocument(app, swaggerOptions)
-  SwaggerModule.setup('docs', app, documentFactory)
+  const swaggerDocument: OpenAPIObject = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, swaggerDocument, swaggerUIconfig);
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
@@ -43,7 +43,7 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   })
 
-
+  await app.startAllMicroservices()
   await app.listen(3000);
 }
 

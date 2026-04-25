@@ -6,7 +6,7 @@ import {SwaggerModule} from "@nestjs/swagger";
 import {OpenAPIObject} from "@nestjs/swagger/dist/interfaces/open-api-spec.interface";
 
 import {AppModule} from './app.module';
-import {swaggerOptions} from "./config/swagger/options.config";
+import {swaggerConfig, swaggerUIconfig} from "./config/swagger.config";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -14,21 +14,21 @@ async function bootstrap(): Promise<void> {
 
   const rmqUser = config.getOrThrow<string>("RABBIT_MQ_USER")
   const rmqPasswd = config.getOrThrow<string>("RABBIT_MQ_PASSWORD")
-  const ticketQueue = config.getOrThrow<string>("TICKET_QUEUE")
+  const eventsQueue = config.getOrThrow<string>("EVENTS_QUEUE")
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [`amqp://${rmqUser}:${rmqPasswd}@rabbitmq:5672`],
-      queue: ticketQueue,
+      queue: eventsQueue,
       queueOptions: {
         durable: true,
       }
     }
   })
 
-  const documentFactory = (): OpenAPIObject => SwaggerModule.createDocument(app, swaggerOptions)
-  SwaggerModule.setup('docs', app, documentFactory)
+  const swaggerDocument: OpenAPIObject = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, swaggerDocument, swaggerUIconfig);
 
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
@@ -44,6 +44,7 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   })
 
+  await app.startAllMicroservices()
   await app.listen(3000);
 }
 

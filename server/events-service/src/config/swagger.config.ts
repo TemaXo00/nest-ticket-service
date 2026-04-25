@@ -1,0 +1,57 @@
+import {DocumentBuilder, SwaggerCustomOptions} from "@nestjs/swagger";
+
+export const swaggerConfig = new DocumentBuilder()
+    .setTitle('Events API')
+    .setVersion('1.0')
+    .setContact("Artem Melnikov", "https://github.com/TemaXo00", "melnikov.artem294@gmail.com")
+    .setDescription("API for creating events")
+    .build()
+
+export const swaggerUIconfig: SwaggerCustomOptions = {
+    swaggerOptions: {
+        persistAuthorization: true,
+        docExpansion: 'list',
+        filter: true,
+        displayRequestDuration: true,
+        operationsSorter: (
+            a: { get: (arg0: string) => string },
+            b: { get: (arg0: string) => string },
+        ) => {
+            const methodOrder = {
+                get: 1,
+                post: 2,
+                put: 3,
+                patch: 4,
+                delete: 5,
+                head: 6,
+                options: 7,
+                trace: 8,
+            };
+            const methodA = a.get('method').toLowerCase();
+            const methodB = b.get('method').toLowerCase();
+
+            return methodOrder[methodA] - methodOrder[methodB];
+        },
+        tagsSorter: 'alpha',
+        tryItOutEnabled: true,
+        requestSnippetsEnabled: true,
+        syntaxHighlight: {
+            activated: true,
+            theme: 'monokai'
+        },
+        displayOperationId: true,
+        defaultModelsExpandDepth: 2,
+        defaultModelExpandDepth: 2,
+        showExtensions: true,
+        showCommonExtensions: true,
+        deepLinking: true,
+        validatorUrl: null,
+        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    },
+    customCss: `
+    .swagger-ui .topbar {display: none !important;}
+    `,
+
+    jsonDocumentUrl: 'docs/swagger.json',
+    yamlDocumentUrl: 'docs/swagger.yaml',
+};
