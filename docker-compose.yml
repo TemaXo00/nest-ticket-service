@@ -1,0 +1,128 @@
+services:
+  ticket-service:
+    build:
+      context: .
+      dockerfile: docker-files/Ticket.Dockerfile
+      args:
+        TICKET_SERVICE_PATH: ${TICKET_SERVICE_PATH}
+    ports:
+      - "${TICKET_SERVICE_PORT}:3000"
+    environment:
+      DATABASE_URL: ${TICKET_DB_URL}
+      REDIS_URL: ${REDIS_URL}
+      RABBIT_MQ_USER: ${RABBIT_MQ_USER}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      TICKET_QUEUE: ${TICKET_QUEUE}
+    volumes:
+      - ./server/ticket-service:/app
+      - /app/node_modules
+    networks:
+      - server
+    depends_on:
+      ticket-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  events-service:
+    build:
+      context: .
+      dockerfile: docker-files/Events.Dockerfile
+      args:
+        EVENTS_SERVICE_PATH: ${EVENTS_SERVICE_PATH}
+    ports:
+      - "${EVENTS_SERVICE_PORT}:3000"
+    environment:
+      DATABASE_URL: ${EVENTS_DB_URL}
+      REDIS_URL: ${REDIS_URL}
+      RABBIT_MQ_USER: ${RABBIT_MQ_USER}
+      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      TICKET_QUEUE: ${TICKET_QUEUE}
+    volumes:
+      - ./server/events-service:/app
+      - /app/node_modules
+    networks:
+      - server
+    depends_on:
+      events-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  ticket-db:
+    image: postgres:18.3-alpine
+    environment:
+      POSTGRES_USER: ${TICKET_DB_USER}
+      POSTGRES_PASSWORD: ${TICKET_DB_PASSWORD}
+      POSTGRES_DB: ${TICKET_DB_NAME}
+    ports:
+      - "${TICKET_DB_PORT}:5432"
+    volumes:
+      - ticket_data:/var/lib/postgresql
+    networks:
+      - server
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TICKET_DB_USER} -d ${TICKET_DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  events-db:
+    image: postgres:18.3-alpine
+    environment:
+      POSTGRES_USER: ${EVENTS_DB_USER}
+      POSTGRES_PASSWORD: ${EVENTS_DB_PASSWORD}
+      POSTGRES_DB: ${EVENTS_DB_NAME}
+    ports:
+      - "${EVENTS_DB_PORT}:5432"
+    volumes:
+      - events_data:/var/lib/postgresql
+    networks:
+      - server
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${EVENTS_DB_USER} -d ${EVENTS_DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8.6.1-alpine
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory-policy allkeys-lru
+    networks:
+      - server
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:4.2.4-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASSWORD}
+    networks:
+      - server
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  server:
+    driver: bridge
+
+volumes:
+  ticket_data:
+  events_data:
+  redis_data:
