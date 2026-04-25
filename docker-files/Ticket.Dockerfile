@@ -9,5 +9,7 @@ RUN npm ci
 
 COPY ${TICKET_SERVICE_PATH}/ .
 
+RUN npx prisma generate
+
 EXPOSE 3000
-CMD sh -c "npm run start:dev"
+CMD sh -c "npx prisma migrate deploy && npm run start:dev"
