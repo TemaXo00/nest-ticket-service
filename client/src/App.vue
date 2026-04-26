@@ -1,11 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {useUserStore} from "@/stores/user.store.ts";
+import {storeToRefs} from "pinia";
+import {ref} from "vue";
+
+const store = useUserStore();
+
+const newUser = ref<string>("");
+
+const {
+  user_id
+} = storeToRefs(store);
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  {{user_id}}
+  <input v-model="newUser"/>
+  <button @click="store.setUser(newUser)">Set user</button>
 </template>
 
 <style scoped></style>
