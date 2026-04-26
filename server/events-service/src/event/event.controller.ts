@@ -12,6 +12,7 @@ import {Event} from '@prisma-gen/client'
 import {CreateEventDto} from "./dto/create-event.dto";
 import {UpdateNameDto} from "./dto/update-name.dto";
 import { EventService } from './event.service';
+import {UpdateTicketsDto} from "./dto/update-tickets.dto";
 
 @ApiTags('Event')
 @Controller('event')
@@ -42,14 +43,23 @@ export class EventController {
     return await this.eventService.createEvent(dto);
   }
 
-  @ApiOperation({ summary: 'Update event' })
+  @ApiOperation({ summary: 'Update event name' })
   @ApiOkResponse({description: 'Event updated'})
   @ApiNotFoundResponse({description: 'Event not found'})
   @ApiBadRequestResponse({description: 'Data not valid'})
   @ApiConflictResponse({description: 'Name already exists'})
-  @Patch(':id')
+  @Patch(':id/name')
   async updateEventName(@Param('id') id: string, @Body() dto: UpdateNameDto): Promise<Event> {
     return await this.eventService.changeName(id, dto);
+  }
+
+  @ApiOperation({ summary: 'Update event tickets amount' })
+  @ApiOkResponse({description: 'Event tickets amount changed'})
+  @ApiNotFoundResponse({description: 'Event not found'})
+  @ApiBadRequestResponse({description: 'Data not valid'})
+  @Patch(':id/tickets')
+  async updateEventTickets(@Param('id') id: string, @Body() dto: UpdateTicketsDto): Promise<Event> {
+    return await this.eventService.changeTicketsAmount(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete event' })
