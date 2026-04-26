@@ -1,21 +1,25 @@
 <script setup lang="ts">
-import {useUserStore} from "@/stores/user.store.ts";
-import {storeToRefs} from "pinia";
-import {ref} from "vue";
+import AppHeader from "@/components/layout/AppHeader.vue";
+import AppMain from "@/components/layout/AppMain.vue";
+import AppFooter from "@/components/layout/AppFooter.vue";
+import LoadingSpinner from "@/components/shared/LoadingSpinner.vue";
+import ErrorAlert from "@/components/shared/ErrorAlert.vue";
+import { useUserStore } from "@/stores/user.store.ts";
+import { onMounted } from "vue";
 
 const store = useUserStore();
 
-const newUser = ref<string>("");
-
-const {
-  user_id
-} = storeToRefs(store);
+onMounted(() => {
+  store.getUser();
+});
 </script>
 
 <template>
-  {{user_id}}
-  <input v-model="newUser"/>
-  <button @click="store.setUser(newUser)">Set user</button>
+  <AppHeader />
+  <AppMain>
+    <router-view />
+  </AppMain>
+  <AppFooter />
+  <LoadingSpinner />
+  <ErrorAlert />
 </template>
-
-<style scoped></style>

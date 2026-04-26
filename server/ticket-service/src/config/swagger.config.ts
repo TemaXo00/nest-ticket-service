@@ -1,10 +1,10 @@
 import {DocumentBuilder, SwaggerCustomOptions} from "@nestjs/swagger";
 
 export const swaggerConfig = new DocumentBuilder()
-    .setTitle('Events API')
+    .setTitle('Tickets API')
     .setVersion('1.0')
     .setContact("Artem Melnikov", "https://github.com/TemaXo00", "melnikov.artem294@gmail.com")
-    .setDescription("API for creating events")
+    .setDescription("API for creating tickets")
     .build()
 
 export const swaggerUIconfig: SwaggerCustomOptions = {

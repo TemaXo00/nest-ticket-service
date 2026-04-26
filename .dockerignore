@@ -1,19 +1,15 @@
 .idea/
 .vscode/
 docs/
-
 npm-debug.log
 yarn-debug.log
 yarn-error.log
-
 dist/
 build/
 *.tgz
 *.tar.gz
-
 .DS_Store
 Thumbs.db
-
 .env
 .prettierrc
 .prettierrc.json
@@ -22,7 +18,6 @@ Thumbs.db
 .oxlintrc.json
 eslint..c.onfig.mjs
 eslint.config.ts
-
 .nx/
 .git/
 *.md
@@ -31,7 +26,6 @@ docker-compose*.yml
 .dockerignore
 .env*
 !.env.example
-
 server/*/prisma/generated/
-
 .vite/
+*.bash

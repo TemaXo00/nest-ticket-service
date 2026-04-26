@@ -24,3 +24,4 @@ temp/
 docker-compose-*.yml
 server/*/prisma/generated/
 .nx/
+*.bash
