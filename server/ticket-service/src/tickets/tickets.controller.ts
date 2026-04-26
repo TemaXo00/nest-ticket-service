@@ -1,7 +1,4 @@
 import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
-import { TicketsService } from './tickets.service';
-import {ReserveTicketDto} from "./dto/reserve-ticket.dto";
-import {CancelTicketDto} from "./dto/cancel-ticket.dto";
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -10,6 +7,12 @@ import {
   ApiOperation,
   ApiTags, ApiUnauthorizedResponse
 } from "@nestjs/swagger";
+import {Ticket} from "@prisma-gen/client";
+
+import {CancelTicketDto} from "./dto/cancel-ticket.dto";
+import {ReserveTicketDto} from "./dto/reserve-ticket.dto";
+import { TicketsService } from './tickets.service';
+
 
 @ApiTags('Tickets')
 @Controller('tickets')
@@ -20,14 +23,14 @@ export class TicketsController {
   @ApiOkResponse({description: 'Returns tickets'})
   @ApiNotFoundResponse({description: 'Event not found'})
   @Get('event/:event_id')
-  async getTicketsByEventId(@Param('event_id') event_id: string) {
+  async getTicketsByEventId(@Param('event_id') event_id: string): Promise<Ticket[]> {
     return this.ticketsService.getTicketsByEvent(event_id);
   }
 
   @ApiOperation({summary: 'Get tickets by user ID'})
   @ApiOkResponse({description: 'Returns ticket by user ID'})
   @Get('user/:user_id')
-  async getTicketsByUser(@Param('user_id') user_id: string) {
+  async getTicketsByUser(@Param('user_id') user_id: string): Promise<Ticket[]> {
     return this.ticketsService.getTicketsByUser(user_id);
   }
 
@@ -35,7 +38,7 @@ export class TicketsController {
   @ApiOkResponse({description: 'Returns ticket by ID'})
   @ApiNotFoundResponse({description: 'Ticket not found'})
   @Get(':id')
-  async getTicketById(@Param('id') id: string) {
+  async getTicketById(@Param('id') id: string): Promise<Ticket> {
     return this.ticketsService.getTicketById(id)
   }
 
@@ -43,7 +46,7 @@ export class TicketsController {
   @ApiCreatedResponse({description: 'Ticket Reserved successfully'})
   @ApiConflictResponse({description: 'No tickets available or already reserved or reserving the last ticket'})
   @Post('/reserve')
-  async reserveTicket(@Body() dto: ReserveTicketDto) {
+  async reserveTicket(@Body() dto: ReserveTicketDto): Promise<Ticket> {
     return this.ticketsService.reserveTicket(dto);
   }
 
@@ -52,7 +55,7 @@ export class TicketsController {
   @ApiNotFoundResponse({description: 'Ticket not found'})
   @ApiUnauthorizedResponse({description: 'You cannot perform this operation'})
   @Delete(':id')
-  async cancelTicket(@Param('id') id: string, @Body() dto: CancelTicketDto) {
+  async cancelTicket(@Param('id') id: string, @Body() dto: CancelTicketDto): Promise<Ticket> {
     return this.ticketsService.cancelTicket(id, dto)
   }
 }

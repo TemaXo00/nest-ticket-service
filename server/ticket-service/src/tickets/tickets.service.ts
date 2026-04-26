@@ -1,11 +1,12 @@
 import {ConflictException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
-import {PrismaService} from "../prisma/prisma.service";
 import {InjectRedis} from "@nestjs-modules/ioredis";
-import Redis from "ioredis";
 import {Ticket} from "@prisma-gen/client";
+import Redis from "ioredis";
+
 import {KnownEventsService} from "../known-events/known-events.service";
-import {ReserveTicketDto} from "./dto/reserve-ticket.dto";
+import {PrismaService} from "../prisma/prisma.service";
 import {CancelTicketDto} from "./dto/cancel-ticket.dto";
+import {ReserveTicketDto} from "./dto/reserve-ticket.dto";
 
 @Injectable()
 export class TicketsService {

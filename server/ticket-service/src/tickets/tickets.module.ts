@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TicketsService } from './tickets.service';
-import { TicketsController } from './tickets.controller';
-import {RedisModule} from "@nestjs-modules/ioredis";
 import {ConfigModule, ConfigService} from "@nestjs/config";
+import {RedisModule} from "@nestjs-modules/ioredis";
+
+import { TicketsController } from './tickets.controller';
+import { TicketsService } from './tickets.service';
 import {KnownEventsModule} from "../known-events/known-events.module";
 
 @Module({
