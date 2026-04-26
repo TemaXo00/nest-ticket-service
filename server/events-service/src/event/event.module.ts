@@ -4,6 +4,7 @@ import {ClientProviderOptions, ClientsModule, Transport} from "@nestjs/microserv
 
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
+import {RedisModule} from "@nestjs-modules/ioredis";
 
 
 @Module({
@@ -32,6 +33,14 @@ import { EventService } from './event.service';
               },
           },
       ]),
+      RedisModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (config: ConfigService) => ({
+              type: 'single',
+              url: config.getOrThrow<string>('REDIS_URL'),
+          }),
+      })
   ],
   controllers: [EventController],
   providers: [EventService],
