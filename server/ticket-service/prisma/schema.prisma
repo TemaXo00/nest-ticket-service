@@ -24,7 +24,8 @@ model KnownEvents {
 
   name String
 
-  tickets Ticket[]
+  tickets      Ticket[]
+  tickets_left Int      @default(1)
 
   created_at DateTime @default(now())
 

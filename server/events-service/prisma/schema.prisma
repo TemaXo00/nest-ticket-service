@@ -11,9 +11,8 @@ datasource db {
 model Event {
   id String @id @default(uuid(4))
 
-  name             String @unique
-  tickets_amount   Int    @default(1)
-  tickets_reserved Int    @default(0)
+  name           String @unique
+  tickets_amount Int    @default(1)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
