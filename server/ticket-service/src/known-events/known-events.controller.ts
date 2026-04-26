@@ -2,9 +2,9 @@ import { Controller } from '@nestjs/common';
 import {MessagePattern, Payload} from "@nestjs/microservices";
 
 import {CreateEventDto} from "./dto/create-event.dto";
-import { KnownEventsService } from './known-events.service';
 import {UpdateEventNameDto} from "./dto/update-event-name.dto";
 import {UpdateEventTicketsDto} from "./dto/update-event-tickets.dto";
+import { KnownEventsService } from './known-events.service';
 
 @Controller()
 export class KnownEventsController {

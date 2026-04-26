@@ -1,10 +1,10 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
+import {KnownEvents} from "@prisma-gen/client";
 
 import {PrismaService} from "../prisma/prisma.service";
 import {CreateEventDto} from "./dto/create-event.dto";
 import {UpdateEventNameDto} from "./dto/update-event-name.dto";
 import {UpdateEventTicketsDto} from "./dto/update-event-tickets.dto";
-import {KnownEvents} from "@prisma-gen/client";
 
 @Injectable()
 export class KnownEventsService {

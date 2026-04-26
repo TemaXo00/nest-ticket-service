@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {ClientProviderOptions, ClientsModule, Transport} from "@nestjs/microservices";
+import {RedisModule} from "@nestjs-modules/ioredis";
 
 import { EventController } from './event.controller';
 import { EventService } from './event.service';
-import {RedisModule} from "@nestjs-modules/ioredis";
 
 
 @Module({

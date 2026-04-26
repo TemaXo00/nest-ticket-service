@@ -1,12 +1,12 @@
 import {ConflictException, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {ClientProxy} from "@nestjs/microservices";
+import {InjectRedis} from "@nestjs-modules/ioredis";
 import { Event } from '@prisma-gen/client'
+import Redis from "ioredis";
 
 import {PrismaService} from "../prisma/prisma.service";
 import {CreateEventDto} from "./dto/create-event.dto";
 import {UpdateNameDto} from "./dto/update-name.dto";
-import {InjectRedis} from "@nestjs-modules/ioredis";
-import Redis from "ioredis";
 import {UpdateTicketsDto} from "./dto/update-tickets.dto";
 
 @Injectable()
@@ -86,7 +86,7 @@ export class EventService {
         return event;
     }
 
-    async changeTicketsAmount(id: string, dto: UpdateTicketsDto) {
+    async changeTicketsAmount(id: string, dto: UpdateTicketsDto): Promise<Event> {
         const previousEvent = await this.getEventById(id)
 
         const event = await this.prisma.event.update({

@@ -11,8 +11,8 @@ import {Event} from '@prisma-gen/client'
 
 import {CreateEventDto} from "./dto/create-event.dto";
 import {UpdateNameDto} from "./dto/update-name.dto";
-import { EventService } from './event.service';
 import {UpdateTicketsDto} from "./dto/update-tickets.dto";
+import { EventService } from './event.service';
 
 @ApiTags('Event')
 @Controller('event')
