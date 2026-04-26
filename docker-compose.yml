@@ -57,6 +57,23 @@ services:
       redis:
         condition: service_healthy
 
+  client:
+    build:
+      context: .
+      dockerfile: docker-files/Client.Dockerfile
+      args:
+        CLIENT_PATH: ${CLIENT_PATH}
+    ports:
+      - "${CLIENT_PORT}:5173"
+    environment:
+      VITE_TICKET_SERVICE_URL: ${TICKET_SERVICE_URL}
+      VITE_EVENTS_SERVICE_URL: ${EVENTS_SERVICE_URL}
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - server
+
   ticket-db:
     image: postgres:18.3-alpine
     environment:
