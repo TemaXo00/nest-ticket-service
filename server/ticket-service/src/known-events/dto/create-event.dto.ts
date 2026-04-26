@@ -1,7 +1,7 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {IsNotEmpty, IsString, IsUUID, Length} from "class-validator";
+import {IsInt, IsNotEmpty, IsString, IsUUID, Length, Max, Min} from "class-validator";
 
-export class EventManipulationsDto {
+export class CreateEventDto {
     @ApiProperty({name: 'id', description: 'ID of event. Gets from event service', example: '763d0e0b-2ed0-49c2-a983-fa046016eb99'})
     @IsNotEmpty()
     @IsString()
@@ -12,4 +12,10 @@ export class EventManipulationsDto {
     @IsString()
     @Length(3, 128)
     name: string
+    @ApiProperty({name: 'tickets_left', description: 'Left tickets for reserving', example: 15})
+    @IsNotEmpty()
+    @IsInt()
+    @Min(1)
+    @Max(10000)
+    tickets_left: number;
 }

@@ -1,21 +1,28 @@
 import { Controller } from '@nestjs/common';
 import {MessagePattern, Payload} from "@nestjs/microservices";
 
-import {EventManipulationsDto} from "./dto/event-manipulations.dto";
+import {CreateEventDto} from "./dto/create-event.dto";
 import { KnownEventsService } from './known-events.service';
+import {UpdateEventNameDto} from "./dto/update-event-name.dto";
+import {UpdateEventTicketsDto} from "./dto/update-event-tickets.dto";
 
 @Controller()
 export class KnownEventsController {
   constructor(private readonly knownEventsService: KnownEventsService) {}
 
   @MessagePattern('event.created')
-  async createEvent(@Payload() data: EventManipulationsDto): Promise<void> {
+  async createEvent(@Payload() data: CreateEventDto): Promise<void> {
     await this.knownEventsService.handleCreateEvent(data)
   }
 
-  @MessagePattern('event.updated')
-  async updateEvent(@Payload() data: EventManipulationsDto): Promise<void> {
-    await this.knownEventsService.handleUpdateEvent(data)
+  @MessagePattern('event.name.updated')
+  async updateEventName(@Payload() data: UpdateEventNameDto): Promise<void> {
+    await this.knownEventsService.handleUpdateNameEvent(data)
+  }
+
+  @MessagePattern('event.tickets.updated')
+  async updateEventTickets(@Payload() data: UpdateEventTicketsDto): Promise<void> {
+    await this.knownEventsService.handleUpdateTicketsEvent(data)
   }
 
   @MessagePattern('event.deleted')
