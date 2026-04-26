@@ -59,7 +59,7 @@ export class KnownEventsService {
         })
     }
 
-    private async checkEventExisting(id: string): Promise<KnownEvents> {
+    async checkEventExisting(id: string): Promise<KnownEvents> {
         const event = await this.prisma.knownEvents.findUnique({
             where: {
                 id,

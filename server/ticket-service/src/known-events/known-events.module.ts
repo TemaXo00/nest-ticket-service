@@ -6,5 +6,6 @@ import { KnownEventsService } from './known-events.service';
 @Module({
   controllers: [KnownEventsController],
   providers: [KnownEventsService],
+  exports: [KnownEventsService]
 })
 export class KnownEventsModule {}

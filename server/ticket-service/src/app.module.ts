@@ -3,6 +3,7 @@ import {ConfigModule} from "@nestjs/config";
 
 import { KnownEventsModule } from './known-events/known-events.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -10,7 +11,8 @@ import { PrismaModule } from './prisma/prisma.module';
       isGlobal: true,
     }),
     PrismaModule,
-    KnownEventsModule
+    KnownEventsModule,
+    TicketsModule
   ],
   controllers: [],
   providers: [],

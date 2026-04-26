@@ -80,7 +80,7 @@ export class EventService {
 
         const cachedEvent = await this.redis.get(`event:${id}`);
         if (cachedEvent) {
-            await this.redis.set(`event:${id}`, JSON.stringify(event));
+            await this.redis.set(`event:${id}`, JSON.stringify(event), 'EX', 600);
         }
 
         return event;
@@ -106,7 +106,7 @@ export class EventService {
 
         const cachedEvent = await this.redis.get(`event:${id}`);
         if (cachedEvent) {
-            await this.redis.set(`event:${id}`, JSON.stringify(event));
+            await this.redis.set(`event:${id}`, JSON.stringify(event), 'EX', 600);
         }
 
         return event;
