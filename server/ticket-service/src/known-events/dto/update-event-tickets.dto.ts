@@ -7,7 +7,7 @@ export class UpdateEventTicketsDto {
     @IsString()
     @IsUUID(4)
     id: string
-    @ApiProperty({name: 'tickets_left', description: 'Left tickets for reserving', example: 15})
+    @ApiProperty({name: 'tickets_amount', description: 'Tickets new amount', example: 30})
     @IsNotEmpty()
     @IsInt()
     @Min(1)
