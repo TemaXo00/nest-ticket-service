@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', () => {
     localStorage.setItem('user', id)
   }
 
-  const removeUser = (id: string): void => {
+  const removeUser = (): void => {
     localStorage.removeItem('user');
   }
 
