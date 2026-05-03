@@ -1,0 +1,40 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/ticket-api"
+    },
+    {
+      "path": "./libs/known-events-feature"
+    },
+    {
+      "path": "./libs/known-events-dto"
+    },
+    {
+      "path": "./libs/databases/ticket-db"
+    },
+    {
+      "path": "./libs/databases/events-db"
+    },
+    {
+      "path": "./libs/tickets-dto"
+    },
+    {
+      "path": "./libs/tickets-feature"
+    },
+    {
+      "path": "./libs/events-feature"
+    },
+    {
+      "path": "./libs/events-dto"
+    },
+    {
+      "path": "./apps/events-api"
+    },
+    {
+      "path": "./libs/common"
+    }
+  ]
+}

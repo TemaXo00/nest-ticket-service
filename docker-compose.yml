@@ -1,78 +1,35 @@
 services:
-  ticket-service:
+  nx-repo:
     build:
       context: .
-      dockerfile: docker-files/Ticket.Dockerfile
-      args:
-        TICKET_SERVICE_PATH: ${TICKET_SERVICE_PATH}
-    ports:
-      - "${TICKET_SERVICE_PORT}:3000"
-    environment:
-      CORS_CLIENT_ORIGIN: ${CORS_CLIENT_ORIGIN}
-      DATABASE_URL: ${TICKET_DB_URL}
-      REDIS_URL: ${REDIS_URL}
-      RABBIT_MQ_USER: ${RABBIT_MQ_USER}
-      RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
-      TICKET_QUEUE: ${TICKET_QUEUE}
-      EVENTS_QUEUE: ${EVENTS_QUEUE}
-    volumes:
-      - ./server/ticket-service:/app
-      - /app/node_modules
-    networks:
-      - server
-    depends_on:
-      ticket-db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
-  events-service:
-    build:
-      context: .
-      dockerfile: docker-files/Events.Dockerfile
-      args:
-        EVENTS_SERVICE_PATH: ${EVENTS_SERVICE_PATH}
     ports:
       - "${EVENTS_SERVICE_PORT}:3000"
+      - "${TICKET_SERVICE_PORT}:3001"
+    volumes:
+      - ./apps:/app/apps
+      - ./libs:/app/libs
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./nx.json:/app/nx.json
+      - ./tsconfig.base.json:/app/tsconfig.base.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
     environment:
-      CORS_CLIENT_ORIGIN: ${CORS_CLIENT_ORIGIN}
-      DATABASE_URL: ${EVENTS_DB_URL}
+      TICKET_DB_URL: ${TICKET_DB_URL}
+      EVENTS_DB_URL: ${EVENTS_DB_URL}
       REDIS_URL: ${REDIS_URL}
       RABBIT_MQ_USER: ${RABBIT_MQ_USER}
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
+      RABBIT_MQ_HOST: ${RABBIT_MQ_HOST}
+      RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
       TICKET_QUEUE: ${TICKET_QUEUE}
-      EVENTS_QUEUE: ${EVENTS_QUEUE}
-    volumes:
-      - ./server/events-service:/app
-      - /app/node_modules
     networks:
       - server
     depends_on:
-      events-db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
-  client:
-    build:
-      context: .
-      dockerfile: docker-files/Client.Dockerfile
-      args:
-        CLIENT_PATH: ${CLIENT_PATH}
-    ports:
-      - "${CLIENT_PORT}:5173"
-    environment:
-      VITE_TICKET_SERVICE_URL: ${TICKET_SERVICE_URL}
-      VITE_EVENTS_SERVICE_URL: ${EVENTS_SERVICE_URL}
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    networks:
-      - server
+      - ticket-db
+      - events-db
+      - redis
+      - rabbitmq
 
   ticket-db:
     image: postgres:18.3-alpine
@@ -80,8 +37,6 @@ services:
       POSTGRES_USER: ${TICKET_DB_USER}
       POSTGRES_PASSWORD: ${TICKET_DB_PASSWORD}
       POSTGRES_DB: ${TICKET_DB_NAME}
-    ports:
-      - "${TICKET_DB_PORT}:5432"
     volumes:
       - ticket_data:/var/lib/postgresql
     networks:
@@ -98,8 +53,6 @@ services:
       POSTGRES_USER: ${EVENTS_DB_USER}
       POSTGRES_PASSWORD: ${EVENTS_DB_PASSWORD}
       POSTGRES_DB: ${EVENTS_DB_NAME}
-    ports:
-      - "${EVENTS_DB_PORT}:5432"
     volumes:
       - events_data:/var/lib/postgresql
     networks:
